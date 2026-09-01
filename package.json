@@ -5,8 +5,7 @@
   "description": "Canal de communication client multi-agents Hermès Core",
   "scripts": {
     "dev": "npx serve . -p 3000",
-    "start": "npx serve . -p 3000",
-    "build": "echo 'Static app ready for Vercel deployment'"
+    "start": "npx serve . -p 3000"
   },
   "keywords": [
     "hermes-core",
