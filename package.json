@@ -4,8 +4,8 @@
   "private": true,
   "description": "Canal de communication client multi-agents Hermès Core",
   "scripts": {
-    "dev": "npx serve . -p 3000",
-    "start": "npx serve . -p 3000"
+    "dev": "npx serve dist -p 3000",
+    "build": "mkdir -p dist && cp -r index.html style.css manifest.json sw.js assets js dist/"
   },
   "keywords": [
     "hermes-core",

@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "outputDirectory": ".",
-  "buildCommand": null,
+  "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
