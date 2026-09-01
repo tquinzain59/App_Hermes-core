@@ -1,0 +1,20 @@
+{
+  "name": "app-hermes-core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Canal de communication client multi-agents Hermès Core",
+  "scripts": {
+    "dev": "npx serve . -p 3000",
+    "start": "npx serve . -p 3000",
+    "build": "echo 'Static app ready for Vercel deployment'"
+  },
+  "keywords": [
+    "hermes-core",
+    "ai-agent",
+    "chat",
+    "pwa",
+    "vercel"
+  ],
+  "author": "Hermès Core Team",
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,16 @@
+services:
+  app-hermes-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_hermes_core
+    ports:
+      - "9300:80"
+    restart: unless-stopped
+    networks:
+      - hermes_network
+
+networks:
+  hermes_network:
+    name: hermes_network
+    driver: bridge

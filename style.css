@@ -1,0 +1,175 @@
+/* Styles personnalisés pour App Hermès Core */
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes typingBlink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.animate-typing-dot-1 {
+  animation: typingBlink 1.2s infinite ease-in-out;
+}
+.animate-typing-dot-2 {
+  animation: typingBlink 1.2s infinite ease-in-out 0.2s;
+}
+.animate-typing-dot-3 {
+  animation: typingBlink 1.2s infinite ease-in-out 0.4s;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(9, 13, 22, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(51, 65, 85, 0.6);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 0.9);
+}
+
+/* Agent Glow Themes */
+.glow-blue {
+  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.25);
+}
+.glow-indigo {
+  box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.25);
+}
+.glow-emerald {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
+}
+.glow-amber {
+  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.25);
+}
+
+/* Glassmorphic cards */
+.glass-panel {
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-header {
+  background: rgba(9, 13, 22, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Markdown typography inside chat messages */
+.prose-hermes {
+  color: #e2e8f0;
+  font-size: 0.925rem;
+  line-height: 1.6;
+}
+
+.prose-hermes p {
+  margin-bottom: 0.75rem;
+}
+
+.prose-hermes p:last-child {
+  margin-bottom: 0;
+}
+
+.prose-hermes strong {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.prose-hermes ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-hermes ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-hermes li {
+  margin-bottom: 0.25rem;
+}
+
+.prose-hermes code {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.375rem;
+  font-size: 0.85em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #93c5fd;
+}
+
+.prose-hermes pre {
+  background: #070a12;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+
+.prose-hermes pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #cbd5e1;
+}
+
+.prose-hermes table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+}
+
+.prose-hermes th {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.prose-hermes td {
+  border: 1px solid rgba(51, 65, 85, 0.4);
+  padding: 0.4rem 0.6rem;
+}
+
+.prose-hermes blockquote {
+  border-left: 3px solid #3b82f6;
+  padding-left: 0.75rem;
+  font-style: italic;
+  color: #94a3b8;
+  margin: 0.75rem 0;
+}
+
+/* Action card animation */
+.action-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}

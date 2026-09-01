@@ -1,0 +1,21 @@
+{
+  "name": "Hermès Core - Espace Client",
+  "short_name": "Hermès App",
+  "description": "Canal de communication officiel pour interagir avec vos agents IA Hermès Core.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090D16",
+  "theme_color": "#090D16",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
