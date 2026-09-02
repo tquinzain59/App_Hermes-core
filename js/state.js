@@ -6,7 +6,8 @@ import { AGENTS } from './agents.js';
  */
 class AppState {
   constructor() {
-    this.activeAgentId = localStorage.getItem(APP_CONFIG.STORAGE_KEYS.ACTIVE_AGENT) || 'recouvrement';
+    this.allowedAgentIds = this.loadAllowedAgents();
+    this.activeAgentId = this.resolveActiveAgent();
     this.chatHistories = this.loadChatHistories();
     this.clientProfile = this.loadClientProfile();
     this.olympeDirectives = this.loadOlympeDirectives();
@@ -16,20 +17,83 @@ class AppState {
     this.listeners = new Set();
   }
 
-  loadClientProfile() {
-    const saved = localStorage.getItem(APP_CONFIG.STORAGE_KEYS.CLIENT_PROFILE);
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+  loadAllowedAgents() {
+    // 1. Paramètres d'URL prioritaires (?agents=recouvrement,commercial)
+    const params = new URLSearchParams(window.location.search);
+    const urlAgents = params.get('agents');
+    if (urlAgents) {
+      const parsed = urlAgents.split(',').map(s => s.trim().toLowerCase()).filter(id => AGENTS[id]);
+      if (parsed.length > 0) {
+        localStorage.setItem('hermes_app_allowed_agents', JSON.stringify(parsed));
+        return parsed;
+      }
     }
-    return {
+
+    // 2. Vérification dans le stockage local
+    const saved = localStorage.getItem('hermes_app_allowed_agents');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const valid = parsed.filter(id => AGENTS[id]);
+          if (valid.length > 0) return valid;
+        }
+      } catch (e) {}
+    }
+
+    // 3. Fallback : tous les agents
+    return Object.keys(AGENTS);
+  }
+
+  resolveActiveAgent() {
+    const params = new URLSearchParams(window.location.search);
+    const urlAgent = (params.get('agent') || '').toLowerCase();
+    if (urlAgent && AGENTS[urlAgent] && this.allowedAgentIds.includes(urlAgent)) {
+      localStorage.setItem(APP_CONFIG.STORAGE_KEYS.ACTIVE_AGENT, urlAgent);
+      return urlAgent;
+    }
+
+    const saved = localStorage.getItem(APP_CONFIG.STORAGE_KEYS.ACTIVE_AGENT);
+    if (saved && AGENTS[saved] && this.allowedAgentIds.includes(saved)) {
+      return saved;
+    }
+
+    return this.allowedAgentIds[0] || 'recouvrement';
+  }
+
+  getAllowedAgents() {
+    return this.allowedAgentIds.map(id => AGENTS[id]).filter(Boolean);
+  }
+
+  loadClientProfile() {
+    const params = new URLSearchParams(window.location.search);
+    const saved = localStorage.getItem(APP_CONFIG.STORAGE_KEYS.CLIENT_PROFILE);
+    let profile = {
       companyName: 'Groupe Novatech SAS',
       siren: '844952084',
       userName: 'Alexandre Martin',
       userRole: 'Directeur Général & ADV',
       email: 'a.martin@novatech-group.fr',
-      plan: 'Hermès Enterprise Suite (4 Agents Actifs)',
+      plan: 'Hermès Enterprise Suite',
       token: 'hm_live_sec_89201fa87e14'
     };
+
+    if (saved) {
+      try { Object.assign(profile, JSON.parse(saved)); } catch (e) {}
+    }
+
+    // Mettre à jour si paramètres URL transmis depuis l'espace client
+    if (params.get('company')) profile.companyName = params.get('company');
+    if (params.get('siren')) profile.siren = params.get('siren');
+    if (params.get('user')) profile.userName = params.get('user');
+    if (params.get('role')) profile.userRole = params.get('role');
+    if (params.get('email')) profile.email = params.get('email');
+
+    try {
+      localStorage.setItem(APP_CONFIG.STORAGE_KEYS.CLIENT_PROFILE, JSON.stringify(profile));
+    } catch (e) {}
+
+    return profile;
   }
 
   loadOlympeDirectives() {
@@ -86,11 +150,14 @@ class AppState {
   }
 
   getActiveAgent() {
-    return AGENTS[this.activeAgentId] || AGENTS.recouvrement;
+    if (!this.allowedAgentIds.includes(this.activeAgentId)) {
+      this.activeAgentId = this.allowedAgentIds[0] || 'recouvrement';
+    }
+    return AGENTS[this.activeAgentId] || AGENTS[this.allowedAgentIds[0]] || AGENTS.recouvrement;
   }
 
   setActiveAgent(agentId) {
-    if (!AGENTS[agentId]) return;
+    if (!AGENTS[agentId] || !this.allowedAgentIds.includes(agentId)) return;
     this.activeAgentId = agentId;
     localStorage.setItem(APP_CONFIG.STORAGE_KEYS.ACTIVE_AGENT, agentId);
     this.notify('agent_changed', agentId);

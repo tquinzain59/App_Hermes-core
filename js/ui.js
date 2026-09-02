@@ -24,6 +24,7 @@ export class UIManager {
     this.renderQuickActions();
     this.renderMessages();
     this.renderOlympeBadge();
+    this.renderClientCompanyHeader();
 
     // S'abonner aux changements d'état
     state.subscribe((event, data) => {
@@ -117,8 +118,15 @@ export class UIManager {
   renderSidebarAgents() {
     if (!this.sidebarAgentsList) return;
     const activeAgent = state.getActiveAgent();
+    const allowedAgents = state.getAllowedAgents();
 
-    this.sidebarAgentsList.innerHTML = Object.values(AGENTS).map(agent => {
+    // Mettre à jour le compteur d'agents souscrits
+    const countBadge = document.getElementById('subscribed-agents-count');
+    if (countBadge) {
+      countBadge.textContent = `${allowedAgents.length} Actif${allowedAgents.length > 1 ? 's' : ''}`;
+    }
+
+    this.sidebarAgentsList.innerHTML = allowedAgents.map(agent => {
       const isActive = agent.id === activeAgent.id;
       const glowClass = isActive ? `glow-${agent.accentClass} border-${agent.accentClass}-500/50 bg-[#161F30]` : 'border-slate-800/80 bg-[#111827]/40 hover:bg-[#111827]/80';
       const indicatorColor = agent.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400';
@@ -148,6 +156,39 @@ export class UIManager {
         </button>
       `;
     }).join('');
+
+    this.renderMobileDrawer();
+  }
+
+  renderMobileDrawer() {
+    const drawerList = document.getElementById('mobile-agent-drawer-list');
+    if (!drawerList) return;
+    const activeAgent = state.getActiveAgent();
+    const allowedAgents = state.getAllowedAgents();
+
+    drawerList.innerHTML = allowedAgents.map(agent => {
+      const isActive = agent.id === activeAgent.id;
+      const borderClass = isActive 
+        ? `border-${agent.accentClass}-500/40 bg-${agent.accentClass}-500/15 text-white shadow-sm font-bold` 
+        : 'border-slate-800 bg-slate-900/60 text-slate-300 hover:bg-slate-800';
+      return `
+        <button onclick="window.hermesApp.switchAgent('${agent.id}')" class="w-full text-left p-3 rounded-xl border ${borderClass} text-xs transition-all flex items-center justify-between">
+          <span>${agent.name} (${agent.alias})</span>
+          ${isActive ? `<span class="w-2 h-2 rounded-full bg-emerald-400"></span>` : ''}
+        </button>
+      `;
+    }).join('');
+  }
+
+  renderClientCompanyHeader() {
+    const compName = document.getElementById('header-company-name');
+    const compSiren = document.getElementById('header-company-siren');
+    if (compName && state.clientProfile?.companyName) {
+      compName.textContent = state.clientProfile.companyName;
+    }
+    if (compSiren && state.clientProfile?.siren) {
+      compSiren.textContent = `(SIREN/SIRET ${state.clientProfile.siren})`;
+    }
   }
 
   renderActiveAgentHeader() {
